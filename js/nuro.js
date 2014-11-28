@@ -322,6 +322,26 @@ function updateSendPageContent() {
     });
 }
 
+function toggleSideMenuAndSwitchToInitPage() {
+    $("footer > a").removeClass("pressed");
+    if (checkUserPass(false)) {
+        updateBalancePageContent();
+        activate_subpage("#uro-balance-page");
+        $("footer > a.info").addClass("pressed");
+    } else {
+        activate_subpage('#change-account');
+    }
+    $.ui.toggleSideMenu();
+}
+
+function switchAccountFromSideMenu(coinTicker) {
+    Nuro.coinTicker = coinTicker;
+    $("#sidemenu-btc-btn").children().removeClass("icon check");
+    $("#sidemenu-ltc-btn").children().removeClass("icon check");
+    $("#sidemenu-uro-btn").children().removeClass("icon check");
+    toggleSideMenuAndSwitchToInitPage();
+}
+
 function register_event_handlers() {
     //qrcode object can only created after document.ready
     Nuro.qrcode = new QRCode("uro-receive-address-qrcode", {
@@ -330,6 +350,26 @@ function register_event_handlers() {
     });
     Nuro.refreshButton = $('#uro-balance-refresh');
     Nuro.accHistDiv = $("#acc-hist-div");
+    
+    $(document).on("click", "#sidemenu-uro-btn", function (evt) {
+        switchAccountFromSideMenu("URO");
+        $("#sidemenu-uro-btn").children().addClass("icon check");
+    });
+    
+    $(document).on("click", "#sidemenu-btc-btn", function (evt) {
+        switchAccountFromSideMenu("BTC");
+        $("#sidemenu-btc-btn").children().addClass("icon check");
+    });
+    
+    $(document).on("click", "#sidemenu-ltc-btn", function (evt) {
+        switchAccountFromSideMenu("LTC");
+        $("#sidemenu-ltc-btn").children().addClass("icon check");
+    });
+    
+    $(document).on("click", ".acc-cat-radio-btns", function (evt) {
+        Nuro.accCat = $(this).val();
+        toggleSideMenuAndSwitchToInitPage();
+    });
 
     $(document).on("click", "#change-address-page-login-button", function (evt) {
         if (!checkUserPass()) {
@@ -355,10 +395,6 @@ function register_event_handlers() {
         updateBalancePageContent();
     });
 
-    $(document).on("click", "#uro-balance-refresh", function (evt) {
-        updateBalancePageContent();
-    });
-
     $(document).on("click", "#send-tx-button", function (evt) {
         sendTxFromPageData();
     });
@@ -374,58 +410,5 @@ function register_event_handlers() {
     $(document).on("click", "#receive-page-send-email-button", function (evt) {
         sendEmail();
     });
-    
-    $(document).on("click", "#sidemenu-uro-btn", function (evt) {
-        $("#sidemenu-btc-btn").children().removeClass("icon check");
-        $("#sidemenu-ltc-btn").children().removeClass("icon check");
-        $("#sidemenu-uro-btn").children().addClass("icon check");
-        Nuro.coinTicker = "URO";
-        if (checkUserPass(false)) {
-            updateBalancePageContent();
-            activate_subpage("#uro-balance-page");
-        } else {
-            activate_subpage('#change-account');
-        }
-        $.ui.toggleSideMenu();
-    });
-    
-    $(document).on("click", "#sidemenu-btc-btn", function (evt) {
-        $("#sidemenu-uro-btn").children().removeClass("icon check");
-        $("#sidemenu-ltc-btn").children().removeClass("icon check");
-        $("#sidemenu-btc-btn").children().addClass("icon check");
-        Nuro.coinTicker = "BTC";
-        if (checkUserPass(false)) {
-            updateBalancePageContent();
-            activate_subpage("#uro-balance-page");
-        } else {
-            activate_subpage('#change-account');
-        }
-        $.ui.toggleSideMenu();
-    });
-    
-    $(document).on("click", "#sidemenu-ltc-btn", function (evt) {
-        $("#sidemenu-uro-btn").children().removeClass("icon check");
-        $("#sidemenu-btc-btn").children().removeClass("icon check");
-        $("#sidemenu-ltc-btn").children().addClass("icon check");
-        Nuro.coinTicker = "LTC";
-        if (checkUserPass(false)) {
-            updateBalancePageContent();
-            activate_subpage("#uro-balance-page");
-        } else {
-            activate_subpage('#change-account');
-        }
-        $.ui.toggleSideMenu();
-    });
-    
-    $(document).on("click", ".acc-cat-radio-btns", function (evt) {
-        Nuro.accCat = $(this).val();
-        if (checkUserPass(false)) {
-            updateBalancePageContent();
-            activate_subpage("#uro-balance-page");
-        } else {
-        }
-        $.ui.toggleSideMenu();
-    });
-    
 }
 $(document).ready(register_event_handlers);
