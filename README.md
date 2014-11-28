@@ -1,6 +1,6 @@
-nuroapp.github.com
+nuroapp.github.io
 ==================
 
-Nuro Next Generation URO Internet Banking Solution
+Nuro: Block Chain Internet Banking Solution
 
 This is a Github Pages repository that hosts the last live version of the Nuro WebApp
